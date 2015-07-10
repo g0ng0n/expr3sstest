@@ -51,3 +51,20 @@ describe('Listing tasks on /tasks', function () {
     })
 });
 
+
+describe('Creating Tasks on /tasks', function () {
+    it('Returns 201 status code', function (done) {
+
+        request(app)
+            .post('/tasks')
+            .send('name=LavarALeo&limpiarlotodyto')
+            .expect(201,done);
+    });
+
+    it('Return the task name', function(done){
+        request(app)
+            .post('/tasks')
+            .send('name=LavaraLeo&limpiarlotodyto')
+            .expect(/LavarALeo/i,done);
+    })
+});
