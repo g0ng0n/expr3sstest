@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 
 var app = require('./../app');
-app.listen(3000, function(){
-    console.log('Listening on port 3000');
+// on heroku we cant hardcode to specific PORT, dynamic PORT,
+// Readoff and enviroment variable on Heroku
+// so we check if we have that env or we assign it the default 3000
+var port = process.env.PORT || 3000
+app.listen(port, function(){
+    console.log('Listening on port port');
 });
