@@ -37,9 +37,12 @@ app.get('/tasks',function(request, response){
 
 app.post('/tasks', urlEncode, function(request, response){
     var newTask = request.body;
+    if(!newTask.name || !newTask.description){
+        response.sendStatus(400);
+        return false;
+    }
     client.hset('tasks', newTask.name, newTask.description, function(error){
        if(error) throw error;
-
         response.status(201).json(newTask.name);
 
     });

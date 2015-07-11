@@ -64,15 +64,23 @@ describe('Creating Tasks on /tasks', function () {
 
         request(app)
             .post('/tasks')
-            .send('name=LavaraLeo&dejarlolimpeoo')
+            .send('name=LavaraLeo&description=dejarlolimpeoo')
             .expect(201,done);
     });
 
-    it('Return the task name', function(done){
+    it('Returns the task name', function(done){
         request(app)
             .post('/tasks')
-            .send('name=LavaraLeo&dejarlolimpeoo')
+            .send('name=LavaraLeo&&description=dejarlolimpeoo')
             .expect(/LavarALeo/i,done);
+    });
+
+    it('Validates Task name and descripttion', function(done){
+
+        request(app)
+            .post('/tasks')
+            .send('name=&description=')
+            .expect(400, done);
     })
 });
 
