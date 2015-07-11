@@ -88,7 +88,7 @@ describe('Creating Tasks on /tasks', function () {
 describe('Deleting Tasks on /tasks', function () {
 
     before(function(){
-        client.hset('task','banana','limpiarla');
+        client.hset('tasks','banana','limpiarla');
 
     });
 
@@ -105,4 +105,38 @@ describe('Deleting Tasks on /tasks', function () {
             .expect(204,done);
     });
 
+});
+
+describe('Shows a task info on /tasks/:name', function(){
+
+
+    before(function(){
+        client.hset('tasks','banana','limpiarla');
+
+    });
+
+    after(function(){
+        client.flushdb();
+    });
+
+   it('Returns 200', function(done){
+
+       request(app)
+           .get('/tasks/banana')
+           .expect(200, done);
+   });
+
+    it('Returns HTML Format', function(done){
+
+        request(app)
+            .get('/tasks/banana')
+            .expect('Content-Type', /html/,done);
+    });
+
+    it('Returns information for given task', function(done){
+
+        request(app)
+            .get('/tasks/banana')
+            .expect(/limpiarla/,done);
+    });
 });
