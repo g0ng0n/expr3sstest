@@ -75,3 +75,26 @@ describe('Creating Tasks on /tasks', function () {
             .expect(/LavarALeo/i,done);
     })
 });
+
+
+describe('Deleting Tasks on /tasks', function () {
+
+    before(function(){
+        client.hset('task','banana','limpiarla');
+
+    });
+
+    after(function(){
+        client.flushdb();
+    });
+
+
+
+    it('Returns 204 status code', function (done) {
+
+        request(app)
+            .delete('/tasks/Banana')
+            .expect(204,done);
+    });
+
+});

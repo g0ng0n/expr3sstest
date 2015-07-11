@@ -21,8 +21,9 @@ if (process.env.REDISTOGO_URL){
 
 }else{
     client = redis.createClient();
+    client.select((process.env.NODE_ENV || 'development').length);
+
 }
-client.select((process.env.NODE_ENV || 'development').length);
 
 client.hset('tasks','Lavar a Leo', 'dejarlo limpeoo');
 client.hset('tasks','codear', 'toddysss');
@@ -44,5 +45,12 @@ app.post('/tasks', urlEncode, function(request, response){
     });
 });
 
+app.delete('/tasks/:name', urlEncode, function(request, response){
+
+    client.hdel('tasks', request.params.name, function(error){
+        if (error) throw error;
+        response.sendStatus(204);
+    })
+});
 
 module.exports = app;
