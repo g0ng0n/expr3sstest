@@ -10,19 +10,31 @@ var urlEncode = bodyParser.urlencoded({ extended : false});
 
 app.use(express.static(__dirname + '/public'));
 
-var tasks= {
-    'Lavar a Leo' : '',
-    'Codear' : 'magea'
-};
+var redis = require('redis');
+var client = redis.createClient();
+
+
+client.select((process.env.NODE_ENV || 'development').length);
+
+
+client.hset('tasks','Lavar a Leo', 'dejarlo limpeoo');
+client.hset('tasks','codear', 'toddysss');
 
 app.get('/tasks',function(request, response){
-    response.json(Object.keys(tasks));
+    client.hkeys('tasks',function(error, names){
+        if(error) throw error;
+        response.json(names);
+    });
 });
 
 app.post('/tasks', urlEncode, function(request, response){
     var newTask = request.body;
-    tasks[newTask.name] = newTask.description;
-    response.status(201).json(newTask.name);
+    client.hset('tasks', newTask.name, newTask.description, function(error){
+       if(error) throw error;
+
+        response.status(201).json(newTask.name);
+
+    });
 });
 
 

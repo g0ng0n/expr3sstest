@@ -4,6 +4,13 @@
 var request = require('supertest');
 var app = require('./app');
 
+var redis = require('redis');
+var client = redis.createClient();
+
+//specify our test db..
+client.select('test'.length);
+client.flushdb();
+
 describe('Request to the root path', function () {
     it('Returns a 200 status code', function (done) {
 
@@ -46,25 +53,25 @@ describe('Listing tasks on /tasks', function () {
 
         request(app)
             .get('/tasks')
-            .expect(JSON.stringify(['Lavar a Leo','Codear']),done);
-
+            .expect(JSON.stringify([]),done);
     })
 });
 
 
 describe('Creating Tasks on /tasks', function () {
+
     it('Returns 201 status code', function (done) {
 
         request(app)
             .post('/tasks')
-            .send('name=LavarALeo&limpiarlotodyto')
+            .send('name=LavaraLeo&dejarlolimpeoo')
             .expect(201,done);
     });
 
     it('Return the task name', function(done){
         request(app)
             .post('/tasks')
-            .send('name=LavaraLeo&limpiarlotodyto')
+            .send('name=LavaraLeo&dejarlolimpeoo')
             .expect(/LavarALeo/i,done);
     })
 });
